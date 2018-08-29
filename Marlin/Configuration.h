@@ -435,10 +435,39 @@
 
 #if ENABLED(DELTA)
 
-  // Make delta curves from many straight lines (linear interpolation).
+   // Make delta curves from many straight lines (linear interpolation).
   // This is a trade-off between visible corners (not enough segments)
   // and processor overload (too many expensive sqrt calls).
   #define DELTA_SEGMENTS_PER_SECOND 100
+
+  // Convert feedrates to apply to the Effector instead of the Carriages
+  #define DELTA_FEEDRATE_SCALING
+
+  // After homing move down to a height where XY movement is unconstrained
+  //#define DELTA_HOME_TO_SAFE_ZONE
+
+  // Delta calibration menu
+  // uncomment to add three points calibration menu option.
+  // See http://minow.blogspot.com/index.html#4918805519571907051
+  #define DELTA_CALIBRATION_MENU
+
+  // uncomment to add G33 Delta Auto-Calibration (Enable EEPROM_SETTINGS to store results)
+  #define DELTA_AUTO_CALIBRATION
+
+  // NOTE NB all values for DELTA_* values MUST be floating point, so always have a decimal point in them
+
+  #if ENABLED(DELTA_AUTO_CALIBRATION)
+    // set the default number of probe points : n*n (1 -> 7)
+    #define DELTA_CALIBRATION_DEFAULT_POINTS 4
+  #endif
+
+  #if ENABLED(DELTA_AUTO_CALIBRATION) || ENABLED(DELTA_CALIBRATION_MENU)
+    // Set the radius for the calibration probe points - max DELTA_PRINTABLE_RADIUS for non-eccentric probes
+    #define DELTA_CALIBRATION_RADIUS 121.5 // mm
+    // Set the steprate for papertest probing
+    #define PROBE_MANUALLY_STEP 0.05 // mm
+  #endif
+
 
   // NOTE NB all values for DELTA_* values MUST be floating point, so always have a decimal point in them
 
@@ -537,12 +566,23 @@
  * Note that if EEPROM is enabled, saved values will override these.
  */
 
+
+
 /**
  * Default Axis Steps Per Unit (steps/mm)
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2[, E3]]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 80, 150 }  // default steps per unit for Kossel (GT2, 20 tooth)
+//#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 80, 150 }  // default steps per unit for Kossel (GT2, 20 tooth)
+// variables to calculate steps
+#define XYZ_FULL_STEPS_PER_ROTATION 200
+#define XYZ_MICROSTEPS 16
+#define XYZ_BELT_PITCH 2
+#define XYZ_PULLEY_TEETH 20
+// delta speeds must be the same on xyz
+#define DEFAULT_XYZ_STEPS_PER_UNIT ((XYZ_FULL_STEPS_PER_ROTATION) * (XYZ_MICROSTEPS) / double(XYZ_BELT_PITCH) / double(XYZ_PULLEY_TEETH))
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { DEFAULT_XYZ_STEPS_PER_UNIT, DEFAULT_XYZ_STEPS_PER_UNIT, DEFAULT_XYZ_STEPS_PER_UNIT, 150 }  // default steps per unit for Kossel (GT2, 20 tooth)
+
 
 /**
  * Default Max Feed Rate (mm/s)
