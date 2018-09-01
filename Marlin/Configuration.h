@@ -589,7 +589,7 @@
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 80, 150 }  // default steps per unit for Kossel (GT2, 20 tooth)
 // variables to calculate steps
 #define XYZ_FULL_STEPS_PER_ROTATION 200
-#define XYZ_MICROSTEPS 16
+#define XYZ_MICROSTEPS 32
 #define XYZ_BELT_PITCH 2
 #define XYZ_PULLEY_TEETH 20
 // delta speeds must be the same on xyz
@@ -1079,7 +1079,7 @@
 // every couple of seconds when it can't accept commands.
 //
 #define HOST_KEEPALIVE_FEATURE        // Disable this if your host doesn't like keepalive messages
-#define DEFAULT_KEEPALIVE_INTERVAL 2  // Number of seconds between "busy" messages. Set with M113.
+#define DEFAULT_KEEPALIVE_INTERVAL 5  // Number of seconds between "busy" messages. Set with M113.
 
 //
 // M100 Free Memory Watcher
